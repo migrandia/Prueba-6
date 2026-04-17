@@ -4,171 +4,67 @@
 <meta charset="UTF-8">
 <title>Editor VIP REAL</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Montserrat&family=Cormorant+Garamond&display=swap" rel="stylesheet">
-
 <style>
-body{margin:0;display:flex;height:100vh;font-family:Montserrat;}
-.panel{width:28%;background:#f4f4f4;padding:15px;overflow:auto;}
-.preview{width:72%;overflow:auto;background:#fdfaf5;}
-
-input,textarea{width:100%;margin:5px 0;padding:8px;}
-
-.hero{
-height:100vh;
-background-size:cover;
+#editor{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+background:#111;
+color:white;
+z-index:9999;
+padding:10px;
 display:flex;
-align-items:center;
-justify-content:center;
-color:white;
-text-align:center;
+gap:10px;
+flex-wrap:wrap;
 }
-
-.overlay{
-background:rgba(0,0,0,0.4);
-padding:20px;
+#editor input, #editor textarea{
+padding:5px;
 }
-
-.section{padding:40px;text-align:center;}
-
-.btn{
-background:black;
-color:white;
-padding:12px 25px;
-text-decoration:none;
-display:inline-block;
-margin:10px;
-}
-
-.galeria img{
-width:80%;
-margin:10px;
-border-radius:10px;
-}
+body{margin-top:140px;}
 </style>
 </head>
 
 <body>
 
-<div class="panel">
+<div id="editor">
 
-<h2>EDITOR REAL</h2>
+<input id="edit_nombres" placeholder="Nombres">
+<input id="edit_fecha" placeholder="Fecha">
+<input id="edit_portada" placeholder="Imagen portada">
+<input id="edit_whatsapp" placeholder="WhatsApp">
 
-<label>Portada</label>
-<input id="portada" value="https://images.unsplash.com/photo-1520854221256-17451cc331bf">
+<textarea id="edit_historia" placeholder="Historia"></textarea>
 
-<label>Nombres</label>
-<input id="nombres" value="Ariel & Samanta">
-
-<label>Frase</label>
-<input id="frase" value="Nuestra historia de amor">
-
-<label>Fecha</label>
-<input id="fecha" value="25 Octubre 2026">
-
-<label>Historia</label>
-<textarea id="historia">Nuestra aventura comenzó...</textarea>
-
-<label>Fotos galería</label>
-<textarea id="galeria">https://images.unsplash.com/photo-1519741497674-611481863552
-https://images.unsplash.com/photo-1522673607200-164d1b6ce486</textarea>
-
-<label>Link ubicación</label>
-<input id="mapa" value="https://maps.google.com">
-
-<label>Hotel</label>
-<input id="hotel" value="Hotel Boutique">
-
-<label>WhatsApp</label>
-<input id="telefono" value="5219990000000">
-
-<label>Música</label>
-<input id="musica" value="">
-
-<button onclick="actualizar()">ACTUALIZAR</button>
+<button onclick="aplicarCambios()">APLICAR</button>
 
 </div>
 
-<div class="preview">
+<script>
 
-<div class="hero" id="hero">
-<div class="overlay">
-<h1 id="p_nombres">Ariel & Samanta</h1>
-<p id="p_frase">Nuestra historia de amor</p>
-<p id="p_fecha">25 Octubre 2026</p>
-</div>
-</div>
+function aplicarCambios(){
 
-<div class="section">
-<h2>Nuestra Historia</h2>
-<p id="p_historia"></p>
-</div>
+// NOMBRES
+document.querySelector(".hero h1").innerText = edit_nombres.value;
 
-<div class="section">
-<h2>Momentos</h2>
-<div id="p_galeria" class="galeria"></div>
-</div>
+// FECHA
+document.querySelector(".hero p").innerText = edit_fecha.value;
 
-<div class="section">
-<h2>Ubicación</h2>
-<a id="p_mapa" class="btn">VER MAPA</a>
-</div>
+// PORTADA
+document.querySelector(".hero").style.backgroundImage =
+"linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('"+edit_portada.value+"')";
 
-<div class="section">
-<h2>Hospedaje</h2>
-<p id="p_hotel"></p>
-</div>
-
-<div class="section">
-<a id="p_whatsapp" class="btn">CONFIRMAR</a>
-</div>
-
- <script>
-
-function actualizar(){
-
-hero.style.backgroundImage = `url(${portada.value})`;
-
-p_nombres.innerText = nombres.value;
-p_frase.innerText = frase.value;
-p_fecha.innerText = fecha.value;
-p_historia.innerText = historia.value;
-
-// GALERÍA REAL
-p_galeria.innerHTML="";
-galeria.value.split("\n").forEach(url=>{
-if(url.trim()!=""){
-p_galeria.innerHTML += `<img src="${url}">`;
-}
-});
-
-// MAPA
-p_mapa.href = mapa.value;
-
-// HOTEL
-p_hotel.innerText = hotel.value;
+// HISTORIA
+document.querySelectorAll(".sec p")[0].innerText = edit_historia.value;
 
 // WHATSAPP
-p_whatsapp.href = "https://wa.me/"+telefono.value+"?text=Confirmo asistencia";
-
-// MÚSICA
-if(musica.value){
-let audio=document.getElementById("audio");
-if(!audio){
-audio=document.createElement("audio");
-audio.id="audio";
-audio.autoplay=true;
-audio.loop=true;
-document.body.appendChild(audio);
+const btn = document.querySelector(".btn-confirm");
+if(btn){
+btn.onclick = function(){
+window.open("https://wa.me/"+edit_whatsapp.value);
 }
-audio.src = musica.value;
 }
 
 }
-
-// AUTO CARGA
-window.onload = actualizar;
 
 </script>
-
-</body>
-</html>
