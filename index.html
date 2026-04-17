@@ -4,73 +4,90 @@
 <meta charset="UTF-8">
 
 <style>
-#editor{
+body{margin:0;font-family:sans-serif;}
+
+#panel{
 position:fixed;
-top:0;
 left:0;
-width:100%;
-background:#000;
-color:#fff;
-z-index:9999;
+top:0;
+width:320px;
+height:100vh;
+background:#111;
+color:white;
 padding:10px;
-display:flex;
-flex-wrap:wrap;
-gap:8px;
+overflow:auto;
+z-index:9999;
 }
-#editor input, #editor textarea{
-padding:5px;
+
+#panel input, #panel textarea{
+width:100%;
+margin:5px 0;
+padding:6px;
 font-size:12px;
 }
-body{margin-top:180px;}
+
+#panel button{
+width:100%;
+margin-top:5px;
+padding:10px;
+background:#b8926a;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+.contenido{
+margin-left:320px;
+}
 </style>
 
   </head>
 <body>
 
-<div id="editor">
+<div id="panel">
+
+<h3>EDITOR VIP PRO</h3>
 
 <input id="nombres" placeholder="Nombres">
 <input id="fecha" placeholder="Fecha">
 <input id="portada" placeholder="Imagen portada">
-<input id="oro" placeholder="Color oro (#b8926a)">
+<input id="color" placeholder="#b8926a">
 <input id="whatsapp" placeholder="WhatsApp">
 
 <textarea id="historia" placeholder="Historia"></textarea>
-
-<textarea id="galeria" placeholder="URLs galería (una por línea)"></textarea>
+<textarea id="galeria" placeholder="Galería URLs"></textarea>
+<textarea id="hoteles" placeholder="Hoteles"></textarea>
 
 <button onclick="aplicar()">APLICAR</button>
+<button onclick="guardar()">GUARDAR</button>
+<button onclick="exportar()">EXPORTAR</button>
 
 </div>
 
+<div class="contenido">
+
 <script>
 
+// APLICAR
 function aplicar(){
 
-// NOMBRES
+// HERO
 document.querySelector(".hero h1").innerText = nombres.value;
-
-// FECHA
 document.querySelector(".hero p").innerText = fecha.value;
 
-// PORTADA
 document.querySelector(".hero").style.backgroundImage =
 "linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('"+portada.value+"')";
 
 // HISTORIA
 document.querySelectorAll(".sec p")[0].innerText = historia.value;
 
-// COLOR ORO
-if(oro.value){
-document.documentElement.style.setProperty('--oro', oro.value);
-}
+// COLOR
+document.documentElement.style.setProperty('--oro', color.value);
 
 // WHATSAPP
 const btn = document.querySelector(".btn-confirm");
 if(btn){
-btn.onclick = function(){
-window.open("https://wa.me/"+whatsapp.value);
-}
+btn.onclick = () => window.open("https://wa.me/"+whatsapp.value);
 }
 
 // GALERÍA
@@ -84,6 +101,59 @@ cont.innerHTML += `<div class="swiper-slide"><img src="${img}"></div>`;
 });
 }
 
+// HOTELES
+const hotelesBox = document.querySelectorAll(".card-family");
+if(hotelesBox.length){
+hotelesBox.forEach((h,i)=>{
+if(hoteles.value.split("\n")[i]){
+h.querySelector("h4").innerText = hoteles.value.split("\n")[i];
+}
+});
+}
+
+}
+
+// GUARDAR
+function guardar(){
+localStorage.setItem("vip", JSON.stringify({
+nombres:nombres.value,
+fecha:fecha.value,
+portada:portada.value,
+color:color.value,
+whatsapp:whatsapp.value,
+historia:historia.value,
+galeria:galeria.value,
+hoteles:hoteles.value
+}));
+}
+
+// CARGAR
+window.onload = ()=>{
+const d = JSON.parse(localStorage.getItem("vip")||"{}");
+
+for(let k in d){
+if(document.getElementById(k)){
+document.getElementById(k).value = d[k];
+}
+}
+
+setTimeout(aplicar,500);
+};
+
+// EXPORTAR
+function exportar(){
+const panel = document.getElementById("panel");
+panel.style.display="none";
+
+const html = document.documentElement.outerHTML;
+
+panel.style.display="block";
+
+const blob = new Blob([html], {type:"text/html"});
+const a = document.createElement("a");
+a.href = URL.createObjectURL(blob);
+a.download = "invitacion.html";
+a.click();
 }
 
 </script>
