@@ -1,223 +1,193 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuestra Boda - Invitación Especial</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Montserrat:wght@100;300;400&family=Pinyon+Script&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --verde-bosque: #4a5d4e;
-            --dorado-viejo: #b0956b;
-            --crema-papel: #f4f1ea;
-            --texto: #333333;
-        }
+<meta charset="UTF-8">
+<title>Generador VIP Migrandia</title>
 
-        /* FONDO GENERAL CON TEXTURA */
-        body {
-            margin: 0;
-            background-color: #d8d3c9;
-            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
-            font-family: 'Montserrat', sans-serif;
-            color: var(--texto);
-            display: flex;
-            justify-content: center;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Montserrat&family=Cormorant+Garamond&display=swap" rel="stylesheet">
 
-        .main-card {
-            width: 100%;
-            max-width: 480px;
-            background-color: var(--crema-papel);
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            overflow-x: hidden;
-        }
+<style>
+body{margin:0;font-family:Montserrat;display:flex;height:100vh;}
+.panel{width:40%;padding:20px;background:#f4f4f4;overflow:auto;}
+.preview{width:60%;background:#fff;overflow:auto;}
 
-        /* DECORACIONES BOTÁNICAS FIJAS */
-        .flower-corner {
-            position: absolute;
-            width: 150px;
-            z-index: 10;
-            pointer-events: none;
-            opacity: 0.8;
-        }
-        .top-right { top: -20px; right: -30px; transform: rotate(15deg); }
-        .bottom-left { bottom: -20px; left: -30px; transform: rotate(195deg); }
+input,textarea,select{
+width:100%;margin:5px 0;padding:8px;
+}
 
-        /* MÚSICA */
-        .music-player {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-            background: white;
-            padding: 10px;
-            border-radius: 50px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-        }
+.hero{
+height:50vh;
+background-size:cover;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+text-align:center;
+}
 
-        /* HERO SECTION */
-        .hero {
-            position: relative;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            text-align: center;
-            color: white;
-            padding-bottom: 50px;
-        }
-        .hero-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            /* REEMPLAZAR: Foto Principal de los novios */
-            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.7)), 
-                        url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800');
-            background-size: cover;
-            background-position: center;
-            z-index: 1;
-        }
-        .hero-content { z-index: 2; }
-        .hero h1 { 
-            font-family: 'Pinyon Script', cursive; 
-            font-size: 4rem; 
-            margin: 0; 
-            font-weight: 100;
-        }
+.overlay{
+background:rgba(0,0,0,0.4);
+padding:20px;
+}
 
-        /* SECCIONES TEXTO */
-        section {
-            padding: 60px 40px;
-            text-align: center;
-            position: relative;
-            z-index: 5;
-        }
-
-        .script-font {
-            font-family: 'Pinyon Script', cursive;
-            font-size: 2.5rem;
-            color: var(--dorado-viejo);
-        }
-
-        .serif-title {
-            font-family: 'Cormorant Garamond', serif;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        /* NUESTRA HISTORIA */
-        .story-box {
-            background: white;
-            padding: 30px;
-            border: 1px solid #e0ddd5;
-            margin: 20px 0;
-            font-size: 0.9rem;
-            line-height: 1.8;
-            font-style: italic;
-            position: relative;
-        }
-        .story-box::after {
-            content: "";
-            position: absolute;
-            top: 10px; left: 10px; right: 10px; bottom: 10px;
-            border: 1px solid var(--dorado-viejo);
-            opacity: 0.3;
-        }
-
-        /* BOTONES */
-        .btn-gold {
-            display: inline-block;
-            border: 1px solid var(--dorado-viejo);
-            color: var(--dorado-viejo);
-            padding: 15px 35px;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 0.7rem;
-            margin-top: 20px;
-            transition: 0.4s;
-        }
-        .btn-gold:hover {
-            background: var(--dorado-viejo);
-            color: white;
-        }
-
-        .divider {
-            width: 50px;
-            height: 1px;
-            background: var(--dorado-viejo);
-            margin: 20px auto;
-        }
-
-    </style>
+button{
+padding:10px;
+background:black;
+color:white;
+border:none;
+cursor:pointer;
+margin-top:10px;
+}
+</style>
 </head>
+
 <body>
 
-    <div class="music-player">
-        <span style="font-size: 10px; margin-right: 10px;">PLAY MUSIC</span>
-        <audio controls style="height: 30px; width: 150px;">
-            <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
-        </audio>
-    </div>
+<div class="panel">
 
-    <div class="main-card">
-        <img src="https://cdn-icons-png.flaticon.com/512/11520/11520630.png" class="flower-corner top-right">
-        <img src="https://cdn-icons-png.flaticon.com/512/11520/11520630.png" class="flower-corner bottom-left">
+<h2>Editor VIP</h2>
 
-        <div class="hero">
-            <div class="hero-bg"></div>
-            <div class="hero-content">
-                <span class="serif-title" style="color: rgba(255,255,255,0.8);">Bienvenidos a la boda de</span>
-                <h1>Camila & Mateo</h1>
-                <p style="letter-spacing: 5px; font-weight: 200;">22 . 10 . 2026</p>
-            </div>
-        </div>
+<input id="nombres" placeholder="Ariel & Samanta">
+<input id="fecha" placeholder="25 Octubre 2026">
+<input id="fechaISO" placeholder="2026-10-25T17:00:00">
 
-        <section>
-            <span class="serif-title">Nuestra Historia</span>
-            <div class="story-box">
-                "Todo comenzó con un café y una tarde de lluvia. Desde aquel primer momento supimos que nuestras vidas caminarían siempre en la misma dirección. Después de 5 años de risas, viajes y aprendizaje, hemos decidido decir: Sí, para siempre."
-            </div>
-            <img src="https://images.unsplash.com/photo-1522673607200-164883e2e0a8?q=80&w=400" style="width: 100%; height: 200px; object-fit: cover; margin-top: 20px; filter: sepia(0.3);" alt="Novios Historia">
-        </section>
+<input id="portada" placeholder="URL portada">
+<input id="musica" placeholder="URL música">
 
-        <section style="background-color: rgba(74, 93, 78, 0.05);">
-            <span class="serif-title">La Celebración</span>
-            <p class="script-font">Ceremonia Religiosa</p>
-            <p><strong>17:00 HRS</strong><br>Capilla del Rosario<br>Calle del Sol #45</p>
-            <a href="#" class="btn-gold">Abrir Mapa</a>
-            
-            <div class="divider"></div>
+<input id="telefono" placeholder="WhatsApp 521...">
+<input id="ciudad" placeholder="Ciudad clima">
 
-            <p class="script-font">Recepción</p>
-            <p><strong>19:30 HRS</strong><br>Quinta de los Arcángeles<br>Carretera Nacional Km 12</p>
-            <a href="#" class="btn-gold">Cómo llegar</a>
-        </section>
+<label>Color principal</label>
+<input type="color" id="color" value="#b8926a">
 
-        <section>
-            <span class="serif-title">Regalos</span>
-            <p>Su presencia es lo más importante, pero si deseáis obsequiarnos algo, os dejamos nuestra mesa de regalos:</p>
-            <a href="#" class="btn-gold">VER MESA DE REGALOS</a>
+<label>Tipografía</label>
+<select id="fuente">
+<option value="Playfair Display">Elegante</option>
+<option value="Montserrat">Moderna</option>
+<option value="Cormorant Garamond">Romántica</option>
+</select>
 
-            <div style="margin-top: 80px;">
-                <span class="serif-title">R.S.V.P</span>
-                <p>Por favor, confirma tu asistencia antes del 1 de octubre.</p>
-                <a href="https://wa.me/123456789" class="btn-gold" style="background: var(--verde-bosque); color: white; border: none;">Confirmar por WhatsApp</a>
-            </div>
-        </section>
+<textarea id="galeria" placeholder="Fotos (una por línea)"></textarea>
 
-        <section style="padding: 20px;">
-            <p class="script-font" style="font-size: 1.8rem;">¡Te esperamos con amor!</p>
-            <p style="font-size: 0.7rem; opacity: 0.5;">C & M</p>
-        </section>
-    </div>
+<button onclick="generar()">GENERAR HTML</button>
+
+<pre id="output"></pre>
+
+</div>
+
+<div class="preview">
+
+<div class="hero" id="hero">
+<div class="overlay">
+<h1 id="p_nombres"></h1>
+<p id="p_fecha"></p>
+</div>
+</div>
+
+</div>
+
+<script>
+
+const inputs = document.querySelectorAll("input,textarea,select");
+
+inputs.forEach(i => i.addEventListener("input", preview));
+
+function preview(){
+p_nombres.innerText = nombres.value;
+p_fecha.innerText = fecha.value;
+hero.style.backgroundImage = `url(${portada.value})`;
+}
+
+function generar(){
+
+const data = {
+nombres:nombres.value,
+fecha:fecha.value,
+fechaISO:fechaISO.value,
+portada:portada.value,
+musica:musica.value,
+telefono:telefono.value,
+ciudad:ciudad.value,
+color:color.value,
+fuente:fuente.value,
+galeria:galeria.value.split("\n")
+};
+
+const html = `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+
+<link href="https://fonts.googleapis.com/css2?family=${data.fuente.replace(" ","+")}&display=swap" rel="stylesheet">
+
+<style>
+body{margin:0;font-family:'${data.fuente}';background:#000;color:#fff;text-align:center;}
+.hero{height:100vh;background:url('${data.portada}') center/cover;display:flex;align-items:center;justify-content:center;}
+.overlay{background:rgba(0,0,0,0.4);padding:20px;}
+h1{color:${data.color};}
+
+.btn{background:${data.color};padding:10px 20px;color:white;text-decoration:none;display:inline-block;margin:10px;}
+.galeria img{width:80%;margin:10px;border-radius:10px;}
+</style>
+
+</head>
+
+<body>
+
+<audio autoplay loop>
+<source src="${data.musica}">
+</audio>
+
+<div class="hero">
+<div class="overlay">
+<h1>${data.nombres}</h1>
+<p>${data.fecha}</p>
+<div id="contador"></div>
+</div>
+</div>
+
+<div class="galeria">
+${data.galeria.map(img=>`<img src="${img}">`).join("")}
+</div>
+
+<a class="btn" href="https://wa.me/${data.telefono}?text=Confirmo asistencia">Confirmar</a>
+
+<script>
+
+const fechaEvento = new Date("${data.fechaISO}");
+
+setInterval(()=>{
+const ahora = new Date();
+const diff = fechaEvento - ahora;
+const dias = Math.floor(diff/(1000*60*60*24));
+document.getElementById("contador").innerHTML = dias + " días";
+},1000);
+
+// PERSONALIZACIÓN INVITADO
+const urlParams = new URLSearchParams(window.location.search);
+const nombre = urlParams.get('n');
+
+if(nombre){
+document.body.insertAdjacentHTML("afterbegin",
+"<h2>Bienvenido "+decodeURIComponent(nombre)+"</h2>");
+}
+
+<\/script>
+
+</body>
+</html>
+`;
+
+const blob = new Blob([html], {type:"text/html"});
+const a = document.createElement("a");
+a.href = URL.createObjectURL(blob);
+a.download = "invitacion-vip.html";
+a.click();
+
+}
+
+</script>
 
 </body>
 </html>
