@@ -2,30 +2,37 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Editor VIP Completo</title>
+<title>Editor VIP Nivel Dios</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Montserrat&family=Cormorant+Garamond&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/scrollreveal"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 
 <style>
 body{margin:0;display:flex;height:100vh;font-family:Montserrat;}
 .panel{width:30%;background:#f4f4f4;padding:15px;overflow:auto;}
 .preview{width:70%;overflow:auto;background:#fdfaf5;}
 
-input,textarea,select{width:100%;margin:5px 0;padding:8px;}
+input,textarea{width:100%;margin:5px 0;padding:8px;}
 
 .hero{height:100vh;background-size:cover;display:flex;align-items:center;justify-content:center;color:white;text-align:center;}
 .overlay{background:rgba(0,0,0,0.4);padding:20px;}
 
 .section{padding:40px;text-align:center;}
 
-h1{font-family:'Playfair Display';}
+h1{font-family:'Playfair Display';font-size:3rem;}
 h2{font-family:'Cormorant Garamond';}
 
-.btn{background:black;color:white;padding:10px 20px;text-decoration:none;display:inline-block;margin:10px;}
+.btn{background:black;color:white;padding:12px 25px;text-decoration:none;display:inline-block;margin:10px;}
 
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .card{background:white;padding:15px;border-radius:10px;}
-.galeria img{width:80%;margin:10px;border-radius:10px;}
+
+.timer{display:flex;justify-content:center;gap:10px;}
+.box{background:rgba(0,0,0,0.5);padding:10px;color:white;}
+
+.swiper{width:100%;max-width:400px;margin:auto;}
+.swiper img{width:100%;border-radius:10px;}
 </style>
 </head>
 
@@ -33,88 +40,88 @@ h2{font-family:'Cormorant Garamond';}
 
 <div class="panel">
 
-<h2>EDITOR VIP</h2>
+<h2>EDITOR NIVEL DIOS</h2>
 
 <input id="nombres" placeholder="Ariel & Samanta">
 <input id="frase" placeholder="Frase">
-<input id="fecha" placeholder="Fecha">
-<input id="fechaISO" placeholder="Fecha contador">
+<input id="fecha" placeholder="Fecha visible">
+<input id="fechaISO" placeholder="2026-10-25T17:00:00">
 
 <input id="portada" placeholder="Imagen portada">
 <input id="musica" placeholder="Música">
 
 <textarea id="historia" placeholder="Historia"></textarea>
-
-<textarea id="familia" placeholder="Familia (una línea por persona)"></textarea>
-
+<textarea id="familia" placeholder="Familia (una por línea)"></textarea>
 <textarea id="galeria" placeholder="Fotos (una por línea)"></textarea>
 
-<input id="mapa" placeholder="Link ubicación">
+<input id="mapa" placeholder="Ubicación">
 <input id="hotel" placeholder="Hotel">
-
 <input id="telefono" placeholder="WhatsApp">
 <input id="ciudad" placeholder="Ciudad clima">
 
 <button onclick="actualizar()">ACTUALIZAR</button>
+<button onclick="exportar()">EXPORTAR HTML</button>
 
 </div>
 
-<div class="preview">
+<div class="preview" id="preview">
 
 <div class="hero" id="hero">
 <div class="overlay">
-<h1 id="p_nombres">Ariel & Samanta</h1>
+<h1 id="p_nombres"></h1>
 <p id="p_frase"></p>
 <p id="p_fecha"></p>
-<div id="contador"></div>
+
+<div class="timer">
+<div class="box" id="dias"></div>
+<div class="box" id="horas"></div>
+</div>
+
 </div>
 </div>
 
-<div class="section">
-<h2>Historia</h2>
+<div class="section reveal">
+<h2>Nuestra Historia</h2>
 <p id="p_historia"></p>
 </div>
 
-<div class="section">
+<div class="section reveal">
 <h2>Familia</h2>
 <div id="p_familia" class="grid"></div>
 </div>
 
-<div class="section">
-<h2>Galería</h2>
-<div id="p_galeria" class="galeria"></div>
+<div class="section reveal">
+<h2>Momentos</h2>
+
+<div class="swiper mySwiper">
+<div class="swiper-wrapper" id="swiper_container"></div>
 </div>
 
-<div class="section">
-<h2>Ubicación</h2>
-<a id="p_mapa" class="btn" target="_blank">Ver ubicación</a>
 </div>
 
-<div class="section">
+<div class="section reveal">
+<a id="p_mapa" class="btn">UBICACIÓN</a>
+</div>
+
+<div class="section reveal">
 <h2>Hospedaje</h2>
 <p id="p_hotel"></p>
 </div>
 
-<div class="section">
-<h2>Regalos</h2>
-<p>Puedes apoyar con transferencia o regalo</p>
-</div>
-
-<div class="section">
-<h2>Vestimenta</h2>
-<p>Formal</p>
-</div>
-
-<div class="section">
+<div class="section reveal">
 <h2>Clima</h2>
 <div id="p_clima"></div>
 </div>
 
-<div class="section">
-<a id="p_whatsapp" class="btn" target="_blank">Confirmar asistencia</a>
+<div class="section reveal">
+<a id="p_whatsapp" class="btn">CONFIRMAR</a>
 </div>
 
-  <script>
+ <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+
+let swiper;
 
 function actualizar(){
 
@@ -133,13 +140,16 @@ p_familia.innerHTML+=`<div class="card">${p}</div>`;
 }
 });
 
-// GALERÍA
-p_galeria.innerHTML="";
+// GALERÍA SWIPER
+swiper_container.innerHTML="";
 galeria.value.split("\n").forEach(img=>{
 if(img.trim()!=""){
-p_galeria.innerHTML+=`<img src="${img}">`;
+swiper_container.innerHTML+=`<div class="swiper-slide"><img src="${img}"></div>`;
 }
 });
+
+if(swiper){ swiper.destroy(); }
+swiper = new Swiper(".mySwiper",{loop:true,autoplay:{delay:2500}});
 
 // MAPA
 p_mapa.href = mapa.value;
@@ -174,13 +184,28 @@ const fechaEvento = new Date(fechaISO.value);
 setInterval(()=>{
 const ahora = new Date();
 const diff = fechaEvento - ahora;
-const dias = Math.floor(diff/(1000*60*60*24));
-document.getElementById("contador").innerHTML = dias+" días";
+
+const d = Math.floor(diff/(1000*60*60*24));
+const h = Math.floor((diff/(1000*60*60))%24);
+
+dias.innerText = d+" días";
+horas.innerText = h+" hrs";
+
 },1000);
 
 }
 
-// PERSONALIZACIÓN INVITADO
+// EXPORTAR HTML
+function exportar(){
+const html = document.documentElement.outerHTML;
+const blob = new Blob([html], {type:"text/html"});
+const a = document.createElement("a");
+a.href = URL.createObjectURL(blob);
+a.download = "invitacion.html";
+a.click();
+}
+
+// INVITADO PERSONALIZADO
 const params = new URLSearchParams(window.location.search);
 const nombre = params.get('n');
 if(nombre){
@@ -188,7 +213,10 @@ document.body.insertAdjacentHTML("afterbegin",
 "<h2 style='text-align:center;'>Bienvenido "+decodeURIComponent(nombre)+"</h2>");
 }
 
+// ANIMACIONES
+ScrollReveal().reveal('.reveal',{distance:'40px',duration:1000});
+
 </script>
 
 </body>
-</html>
+</html> 
