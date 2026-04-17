@@ -2,42 +2,23 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Generador VIP Migrandia</title>
+<title>Editor VIP Completo</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Montserrat&family=Cormorant+Garamond&display=swap" rel="stylesheet">
 
 <style>
-body{margin:0;font-family:Montserrat;display:flex;height:100vh;}
-.panel{width:40%;padding:20px;background:#f4f4f4;overflow:auto;}
-.preview{width:60%;background:#fff;overflow:auto;}
+body{margin:0;display:flex;height:100vh;font-family:Montserrat;}
+.panel{width:30%;background:#f4f4f4;padding:15px;overflow:auto;}
+.preview{width:70%;overflow:auto;background:#fdfaf5;}
 
-input,textarea,select{
-width:100%;margin:5px 0;padding:8px;
-}
+input,textarea{width:100%;margin:5px 0;padding:8px;}
 
-.hero{
-height:50vh;
-background-size:cover;
-display:flex;
-align-items:center;
-justify-content:center;
-color:white;
-text-align:center;
-}
+.hero{height:100vh;background-size:cover;display:flex;align-items:center;justify-content:center;color:white;text-align:center;}
+.overlay{background:rgba(0,0,0,0.4);padding:20px;}
 
-.overlay{
-background:rgba(0,0,0,0.4);
-padding:20px;
-}
+.section{padding:40px;text-align:center;}
 
-button{
-padding:10px;
-background:black;
-color:white;
-border:none;
-cursor:pointer;
-margin-top:10px;
-}
+.btn{background:black;color:white;padding:10px 20px;text-decoration:none;}
 </style>
 </head>
 
@@ -45,33 +26,25 @@ margin-top:10px;
 
 <div class="panel">
 
-<h2>Editor VIP</h2>
+<h2>EDITOR</h2>
 
 <input id="nombres" placeholder="Ariel & Samanta">
-<input id="fecha" placeholder="25 Octubre 2026">
-<input id="fechaISO" placeholder="2026-10-25T17:00:00">
+<input id="frase" placeholder="Frase">
+<input id="fecha" placeholder="Fecha">
+<input id="fechaISO" placeholder="Fecha contador">
 
-<input id="portada" placeholder="URL portada">
-<input id="musica" placeholder="URL música">
+<input id="portada" placeholder="Imagen portada">
+<input id="musica" placeholder="Música">
 
-<input id="telefono" placeholder="WhatsApp 521...">
-<input id="ciudad" placeholder="Ciudad clima">
-
-<label>Color principal</label>
-<input type="color" id="color" value="#b8926a">
-
-<label>Tipografía</label>
-<select id="fuente">
-<option value="Playfair Display">Elegante</option>
-<option value="Montserrat">Moderna</option>
-<option value="Cormorant Garamond">Romántica</option>
-</select>
+<textarea id="historia" placeholder="Historia"></textarea>
 
 <textarea id="galeria" placeholder="Fotos (una por línea)"></textarea>
 
-<button onclick="generar()">GENERAR HTML</button>
+<input id="telefono" placeholder="WhatsApp">
 
-<pre id="output"></pre>
+<input id="ciudad" placeholder="Ciudad clima">
+
+<button onclick="actualizar()">Actualizar</button>
 
 </div>
 
@@ -79,112 +52,90 @@ margin-top:10px;
 
 <div class="hero" id="hero">
 <div class="overlay">
-<h1 id="p_nombres"></h1>
-<p id="p_fecha"></p>
-</div>
-</div>
-
-</div>
-
-<script>
-
-const inputs = document.querySelectorAll("input,textarea,select");
-
-inputs.forEach(i => i.addEventListener("input", preview));
-
-function preview(){
-p_nombres.innerText = nombres.value;
-p_fecha.innerText = fecha.value;
-hero.style.backgroundImage = `url(${portada.value})`;
-}
-
-function generar(){
-
-const data = {
-nombres:nombres.value,
-fecha:fecha.value,
-fechaISO:fechaISO.value,
-portada:portada.value,
-musica:musica.value,
-telefono:telefono.value,
-ciudad:ciudad.value,
-color:color.value,
-fuente:fuente.value,
-galeria:galeria.value.split("\n")
-};
-
-const html = `
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-
-<link href="https://fonts.googleapis.com/css2?family=${data.fuente.replace(" ","+")}&display=swap" rel="stylesheet">
-
-<style>
-body{margin:0;font-family:'${data.fuente}';background:#000;color:#fff;text-align:center;}
-.hero{height:100vh;background:url('${data.portada}') center/cover;display:flex;align-items:center;justify-content:center;}
-.overlay{background:rgba(0,0,0,0.4);padding:20px;}
-h1{color:${data.color};}
-
-.btn{background:${data.color};padding:10px 20px;color:white;text-decoration:none;display:inline-block;margin:10px;}
-.galeria img{width:80%;margin:10px;border-radius:10px;}
-</style>
-
-</head>
-
-<body>
-
-<audio autoplay loop>
-<source src="${data.musica}">
-</audio>
-
-<div class="hero">
-<div class="overlay">
-<h1>${data.nombres}</h1>
-<p>${data.fecha}</p>
+<h1 id="p_nombres">Ariel & Samanta</h1>
+<p id="p_frase">Nuestra boda</p>
+<p id="p_fecha">25.10.2026</p>
 <div id="contador"></div>
 </div>
 </div>
 
-<div class="galeria">
-${data.galeria.map(img=>`<img src="${img}">`).join("")}
+<div class="section">
+<h2>Historia</h2>
+<p id="p_historia"></p>
 </div>
 
-<a class="btn" href="https://wa.me/${data.telefono}?text=Confirmo asistencia">Confirmar</a>
+<div class="section">
+<h2>Galería</h2>
+<div id="p_galeria"></div>
+</div>
 
-<script>
+<div class="section">
+<h2>Clima</h2>
+<div id="p_clima"></div>
+</div>
 
-const fechaEvento = new Date("${data.fechaISO}");
+<div class="section">
+<a id="p_whatsapp" class="btn" target="_blank">Confirmar asistencia</a>
+</div>
 
+  <script>
+
+function actualizar(){
+
+p_nombres.innerText = nombres.value;
+p_frase.innerText = frase.value;
+p_fecha.innerText = fecha.value;
+p_historia.innerText = historia.value;
+
+hero.style.backgroundImage = `url(${portada.value})`;
+
+// GALERÍA
+p_galeria.innerHTML="";
+galeria.value.split("\n").forEach(img=>{
+if(img.trim()!=""){
+p_galeria.innerHTML+=`<img src="${img}" style="width:80%;margin:10px;border-radius:10px;">`;
+}
+});
+
+// WHATSAPP
+p_whatsapp.href = "https://wa.me/"+telefono.value+"?text=Confirmo asistencia";
+
+// CLIMA
+p_clima.innerHTML = `
+<a class="weatherwidget-io" href="https://forecast7.com">Clima</a>
+<script src="https://weatherwidget.io/js/widget.min.js"><\/script>
+`;
+
+// MÚSICA
+if(musica.value){
+let audio=document.getElementById("audio");
+if(!audio){
+audio=document.createElement("audio");
+audio.id="audio";
+audio.autoplay=true;
+audio.loop=true;
+document.body.appendChild(audio);
+}
+audio.src=musica.value;
+}
+
+// CONTADOR
+const fechaEvento = new Date(fechaISO.value);
 setInterval(()=>{
 const ahora = new Date();
 const diff = fechaEvento - ahora;
 const dias = Math.floor(diff/(1000*60*60*24));
-document.getElementById("contador").innerHTML = dias + " días";
+document.getElementById("contador").innerHTML = dias+" días";
 },1000);
 
-// PERSONALIZACIÓN INVITADO
-const urlParams = new URLSearchParams(window.location.search);
-const nombre = urlParams.get('n');
+}
 
+// INVITADO PERSONALIZADO
+const params = new URLSearchParams(window.location.search);
+const nombre = params.get('n');
 if(nombre){
 document.body.insertAdjacentHTML("afterbegin",
 "<h2>Bienvenido "+decodeURIComponent(nombre)+"</h2>");
-}
-
-<\/script>
-
-</body>
-</html>
-`;
-
-const blob = new Blob([html], {type:"text/html"});
-const a = document.createElement("a");
-a.href = URL.createObjectURL(blob);
-a.download = "invitacion-vip.html";
-a.click();
-
 }
 
 </script>
