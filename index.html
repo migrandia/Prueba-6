@@ -11,14 +11,21 @@ body{margin:0;display:flex;height:100vh;font-family:Montserrat;}
 .panel{width:30%;background:#f4f4f4;padding:15px;overflow:auto;}
 .preview{width:70%;overflow:auto;background:#fdfaf5;}
 
-input,textarea{width:100%;margin:5px 0;padding:8px;}
+input,textarea,select{width:100%;margin:5px 0;padding:8px;}
 
 .hero{height:100vh;background-size:cover;display:flex;align-items:center;justify-content:center;color:white;text-align:center;}
 .overlay{background:rgba(0,0,0,0.4);padding:20px;}
 
 .section{padding:40px;text-align:center;}
 
-.btn{background:black;color:white;padding:10px 20px;text-decoration:none;}
+h1{font-family:'Playfair Display';}
+h2{font-family:'Cormorant Garamond';}
+
+.btn{background:black;color:white;padding:10px 20px;text-decoration:none;display:inline-block;margin:10px;}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.card{background:white;padding:15px;border-radius:10px;}
+.galeria img{width:80%;margin:10px;border-radius:10px;}
 </style>
 </head>
 
@@ -26,7 +33,7 @@ input,textarea{width:100%;margin:5px 0;padding:8px;}
 
 <div class="panel">
 
-<h2>EDITOR</h2>
+<h2>EDITOR VIP</h2>
 
 <input id="nombres" placeholder="Ariel & Samanta">
 <input id="frase" placeholder="Frase">
@@ -38,13 +45,17 @@ input,textarea{width:100%;margin:5px 0;padding:8px;}
 
 <textarea id="historia" placeholder="Historia"></textarea>
 
+<textarea id="familia" placeholder="Familia (una línea por persona)"></textarea>
+
 <textarea id="galeria" placeholder="Fotos (una por línea)"></textarea>
 
-<input id="telefono" placeholder="WhatsApp">
+<input id="mapa" placeholder="Link ubicación">
+<input id="hotel" placeholder="Hotel">
 
+<input id="telefono" placeholder="WhatsApp">
 <input id="ciudad" placeholder="Ciudad clima">
 
-<button onclick="actualizar()">Actualizar</button>
+<button onclick="actualizar()">ACTUALIZAR</button>
 
 </div>
 
@@ -53,8 +64,8 @@ input,textarea{width:100%;margin:5px 0;padding:8px;}
 <div class="hero" id="hero">
 <div class="overlay">
 <h1 id="p_nombres">Ariel & Samanta</h1>
-<p id="p_frase">Nuestra boda</p>
-<p id="p_fecha">25.10.2026</p>
+<p id="p_frase"></p>
+<p id="p_fecha"></p>
 <div id="contador"></div>
 </div>
 </div>
@@ -65,8 +76,33 @@ input,textarea{width:100%;margin:5px 0;padding:8px;}
 </div>
 
 <div class="section">
+<h2>Familia</h2>
+<div id="p_familia" class="grid"></div>
+</div>
+
+<div class="section">
 <h2>Galería</h2>
-<div id="p_galeria"></div>
+<div id="p_galeria" class="galeria"></div>
+</div>
+
+<div class="section">
+<h2>Ubicación</h2>
+<a id="p_mapa" class="btn" target="_blank">Ver ubicación</a>
+</div>
+
+<div class="section">
+<h2>Hospedaje</h2>
+<p id="p_hotel"></p>
+</div>
+
+<div class="section">
+<h2>Regalos</h2>
+<p>Puedes apoyar con transferencia o regalo</p>
+</div>
+
+<div class="section">
+<h2>Vestimenta</h2>
+<p>Formal</p>
 </div>
 
 <div class="section">
@@ -89,20 +125,34 @@ p_historia.innerText = historia.value;
 
 hero.style.backgroundImage = `url(${portada.value})`;
 
+// FAMILIA
+p_familia.innerHTML="";
+familia.value.split("\n").forEach(p=>{
+if(p.trim()!=""){
+p_familia.innerHTML+=`<div class="card">${p}</div>`;
+}
+});
+
 // GALERÍA
 p_galeria.innerHTML="";
 galeria.value.split("\n").forEach(img=>{
 if(img.trim()!=""){
-p_galeria.innerHTML+=`<img src="${img}" style="width:80%;margin:10px;border-radius:10px;">`;
+p_galeria.innerHTML+=`<img src="${img}">`;
 }
 });
+
+// MAPA
+p_mapa.href = mapa.value;
+
+// HOTEL
+p_hotel.innerText = hotel.value;
 
 // WHATSAPP
 p_whatsapp.href = "https://wa.me/"+telefono.value+"?text=Confirmo asistencia";
 
 // CLIMA
 p_clima.innerHTML = `
-<a class="weatherwidget-io" href="https://forecast7.com">Clima</a>
+<a class="weatherwidget-io" href="https://forecast7.com">Clima en ${ciudad.value}</a>
 <script src="https://weatherwidget.io/js/widget.min.js"><\/script>
 `;
 
@@ -130,12 +180,12 @@ document.getElementById("contador").innerHTML = dias+" días";
 
 }
 
-// INVITADO PERSONALIZADO
+// PERSONALIZACIÓN INVITADO
 const params = new URLSearchParams(window.location.search);
 const nombre = params.get('n');
 if(nombre){
 document.body.insertAdjacentHTML("afterbegin",
-"<h2>Bienvenido "+decodeURIComponent(nombre)+"</h2>");
+"<h2 style='text-align:center;'>Bienvenido "+decodeURIComponent(nombre)+"</h2>");
 }
 
 </script>
