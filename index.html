@@ -1,164 +1,134 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-
 <style>
-body{margin:0;font-family:sans-serif;}
-
-#panel{
+#btnEditor{
 position:fixed;
-left:0;
-top:0;
-width:320px;
-height:100vh;
-background:#111;
-color:white;
-padding:10px;
-overflow:auto;
+top:20px;
+right:20px;
 z-index:9999;
-}
-
-#panel input, #panel textarea{
-width:100%;
-margin:5px 0;
-padding:6px;
-font-size:12px;
-}
-
-#panel button{
-width:100%;
-margin-top:5px;
-padding:10px;
 background:#b8926a;
 color:white;
-border:none;
+padding:10px;
+border-radius:50%;
 cursor:pointer;
 }
 
-.contenido{
-margin-left:320px;
+#editorBox{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+display:none;
+z-index:9999;
+overflow:auto;
+}
+
+#editorContent{
+background:white;
+width:90%;
+max-width:600px;
+margin:40px auto;
+padding:20px;
+border-radius:10px;
+}
+
+#editorContent input,
+#editorContent textarea{
+width:100%;
+margin:10px 0;
+padding:10px;
 }
 </style>
 
-  </head>
-<body>
+<div id="btnEditor" onclick="abrirEditor()">⚙️</div>
 
-<div id="panel">
+<div id="editorBox">
+<div id="editorContent">
 
-<h3>EDITOR VIP PRO</h3>
+<h2>Editar Invitación</h2>
 
-<input id="nombres" placeholder="Nombres">
-<input id="fecha" placeholder="Fecha">
-<input id="portada" placeholder="Imagen portada">
-<input id="color" placeholder="#b8926a">
-<input id="whatsapp" placeholder="WhatsApp">
+<input id="e_nombres" placeholder="Nombres">
+<input id="e_fecha" placeholder="Fecha">
+<input id="e_portada" placeholder="URL imagen">
 
-<textarea id="historia" placeholder="Historia"></textarea>
-<textarea id="galeria" placeholder="Galería URLs"></textarea>
-<textarea id="hoteles" placeholder="Hoteles"></textarea>
+<textarea id="e_historia" placeholder="Historia"></textarea>
 
-<button onclick="aplicar()">APLICAR</button>
+<textarea id="e_galeria" placeholder="URLs (una por línea)"></textarea>
+
+<input id="e_whatsapp" placeholder="WhatsApp">
+
 <button onclick="guardar()">GUARDAR</button>
-<button onclick="exportar()">EXPORTAR</button>
+<button onclick="cerrarEditor()">CERRAR</button>
 
 </div>
-
-<div class="contenido">
-
+</div>
 <script>
 
-// APLICAR
-function aplicar(){
+function abrirEditor(){
+document.getElementById("editorBox").style.display="block";
+}
+
+function cerrarEditor(){
+document.getElementById("editorBox").style.display="none";
+}
+
+function guardar(){
 
 // HERO
-document.querySelector(".hero h1").innerText = nombres.value;
-document.querySelector(".hero p").innerText = fecha.value;
+document.querySelector(".hero h1").innerText = e_nombres.value;
+document.querySelector(".hero p").innerText = e_fecha.value;
 
 document.querySelector(".hero").style.backgroundImage =
-"linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('"+portada.value+"')";
+"url('"+e_portada.value+"')";
 
 // HISTORIA
-document.querySelectorAll(".sec p")[0].innerText = historia.value;
-
-// COLOR
-document.documentElement.style.setProperty('--oro', color.value);
-
-// WHATSAPP
-const btn = document.querySelector(".btn-confirm");
-if(btn){
-btn.onclick = () => window.open("https://wa.me/"+whatsapp.value);
-}
+document.querySelectorAll(".sec p")[0].innerText = e_historia.value;
 
 // GALERÍA
 const cont = document.querySelector(".swiper-wrapper");
 if(cont){
 cont.innerHTML="";
-galeria.value.split("\n").forEach(img=>{
+e_galeria.value.split("\n").forEach(img=>{
 if(img.trim()!=""){
 cont.innerHTML += `<div class="swiper-slide"><img src="${img}"></div>`;
 }
 });
 }
 
-// HOTELES
-const hotelesBox = document.querySelectorAll(".card-family");
-if(hotelesBox.length){
-hotelesBox.forEach((h,i)=>{
-if(hoteles.value.split("\n")[i]){
-h.querySelector("h4").innerText = hoteles.value.split("\n")[i];
-}
-});
+// WHATSAPP
+const btn = document.querySelector(".btn-confirm");
+if(btn){
+btn.onclick = () => window.open("https://wa.me/"+e_whatsapp.value);
 }
 
-}
-
-// GUARDAR
-function guardar(){
+// GUARDAR LOCAL
 localStorage.setItem("vip", JSON.stringify({
-nombres:nombres.value,
-fecha:fecha.value,
-portada:portada.value,
-color:color.value,
-whatsapp:whatsapp.value,
-historia:historia.value,
-galeria:galeria.value,
-hoteles:hoteles.value
+nombres:e_nombres.value,
+fecha:e_fecha.value,
+portada:e_portada.value,
+historia:e_historia.value,
+galeria:e_galeria.value,
+whatsapp:e_whatsapp.value
 }));
+
 }
 
 // CARGAR
 window.onload = ()=>{
 const d = JSON.parse(localStorage.getItem("vip")||"{}");
 
-for(let k in d){
-if(document.getElementById(k)){
-document.getElementById(k).value = d[k];
-}
-}
+if(d.nombres) e_nombres.value = d.nombres;
+if(d.fecha) e_fecha.value = d.fecha;
+if(d.portada) e_portada.value = d.portada;
+if(d.historia) e_historia.value = d.historia;
+if(d.galeria) e_galeria.value = d.galeria;
+if(d.whatsapp) e_whatsapp.value = d.whatsapp;
 
-setTimeout(aplicar,500);
+if(d.nombres) guardar();
 };
 
-// EXPORTAR
-function exportar(){
-const panel = document.getElementById("panel");
-panel.style.display="none";
-
-const html = document.documentElement.outerHTML;
-
-panel.style.display="block";
-
-const blob = new Blob([html], {type:"text/html"});
-const a = document.createElement("a");
-a.href = URL.createObjectURL(blob);
-a.download = "invitacion.html";
-a.click();
-}
-
 </script>
-
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -549,3 +519,5 @@ a.click();
     </script>
 </body>
 </html>
+
+
