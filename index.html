@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Editor VIP REAL</title>
 
 <style>
 #editor{
@@ -10,59 +9,79 @@ position:fixed;
 top:0;
 left:0;
 width:100%;
-background:#111;
-color:white;
+background:#000;
+color:#fff;
 z-index:9999;
 padding:10px;
 display:flex;
-gap:10px;
 flex-wrap:wrap;
+gap:8px;
 }
 #editor input, #editor textarea{
 padding:5px;
+font-size:12px;
 }
-body{margin-top:140px;}
+body{margin-top:180px;}
 </style>
-</head>
 
+  </head>
 <body>
 
 <div id="editor">
 
-<input id="edit_nombres" placeholder="Nombres">
-<input id="edit_fecha" placeholder="Fecha">
-<input id="edit_portada" placeholder="Imagen portada">
-<input id="edit_whatsapp" placeholder="WhatsApp">
+<input id="nombres" placeholder="Nombres">
+<input id="fecha" placeholder="Fecha">
+<input id="portada" placeholder="Imagen portada">
+<input id="oro" placeholder="Color oro (#b8926a)">
+<input id="whatsapp" placeholder="WhatsApp">
 
-<textarea id="edit_historia" placeholder="Historia"></textarea>
+<textarea id="historia" placeholder="Historia"></textarea>
 
-<button onclick="aplicarCambios()">APLICAR</button>
+<textarea id="galeria" placeholder="URLs galería (una por línea)"></textarea>
+
+<button onclick="aplicar()">APLICAR</button>
 
 </div>
 
 <script>
 
-function aplicarCambios(){
+function aplicar(){
 
 // NOMBRES
-document.querySelector(".hero h1").innerText = edit_nombres.value;
+document.querySelector(".hero h1").innerText = nombres.value;
 
 // FECHA
-document.querySelector(".hero p").innerText = edit_fecha.value;
+document.querySelector(".hero p").innerText = fecha.value;
 
 // PORTADA
 document.querySelector(".hero").style.backgroundImage =
-"linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('"+edit_portada.value+"')";
+"linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('"+portada.value+"')";
 
 // HISTORIA
-document.querySelectorAll(".sec p")[0].innerText = edit_historia.value;
+document.querySelectorAll(".sec p")[0].innerText = historia.value;
+
+// COLOR ORO
+if(oro.value){
+document.documentElement.style.setProperty('--oro', oro.value);
+}
 
 // WHATSAPP
 const btn = document.querySelector(".btn-confirm");
 if(btn){
 btn.onclick = function(){
-window.open("https://wa.me/"+edit_whatsapp.value);
+window.open("https://wa.me/"+whatsapp.value);
 }
+}
+
+// GALERÍA
+const cont = document.querySelector(".swiper-wrapper");
+if(cont){
+cont.innerHTML="";
+galeria.value.split("\n").forEach(img=>{
+if(img.trim()!=""){
+cont.innerHTML += `<div class="swiper-slide"><img src="${img}"></div>`;
+}
+});
 }
 
 }
@@ -460,4 +479,3 @@ window.open("https://wa.me/"+edit_whatsapp.value);
     </script>
 </body>
 </html>
-
